@@ -516,7 +516,7 @@ var Calendar = {
 			{
 				var inputs = popup.getElementsByTagName('div')[2].getElementsByTagName('input');
 				inputs[0].value = data.header;
-				setTimeout(function() {unch_event(inputs[0])},10);
+				ch_event(inputs[0]);
 				inputs[1].value = (data.members == "&nbsp;") ? '' : data.members;
 				ch_members(inputs[1]);
 				var textarea = document.getElementById('discription');
@@ -524,7 +524,7 @@ var Calendar = {
 				ch_text(textarea);
 			} else {
 				var inputs = popup.getElementsByTagName('div')[2].getElementsByTagName('input');
-				unch_event(inputs[0]);
+				setTimeout(function() {unch_event(inputs[0])}, 10);
 				unch_members(inputs[1]);
 				inputs[0].value = '';
 				inputs[1].value = '';
@@ -634,7 +634,3 @@ function unch_text(inp) {
 	inp.style.display = '';
 	inp.focus();
 }
-
-
-
-
