@@ -1,0 +1,427 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>Интерактивный календарь</title>
+<script type="text/javascript" src="./common.js"></script>
+<link href="./style.css" type="text/css" rel="stylesheet">
+</head>
+<body onLoad="start()">
+	<div class="header">
+		<div class="header_layer full_h">
+			<div class="header_wrapper">
+				<div class="header_inline_ui">
+					<div class="full_h fl_l">
+						<div class="full_h" style="display: inline-block;">
+							<input id="new_event" type="button" class="input_btn" onclick="Calendar.hWindow()" value="Добавить"><br>
+							<div id="new_event_layer" class="new_event_layer" style="display: none;">
+								<div class="arrow_top"></div>
+                                <div class="close_window" style="right: 0;" onclick="Calendar.hWindow()"></div>
+								<div style="padding: 23px;">
+									<input id="new_event_text" type="text" class="input_txt" placeholder="30 сентября 2013, День рождения, Катя" style="height: 27px; width: 250px;"><br>
+									<input type="button" style="margin: 10px 0 0 0;" onclick="Calendar.actNewEvent()" value="Создать"><!-- Дефолтная кнопка -->
+								</div>
+							</div>
+						</div>
+						<div class="full_h" style="display: inline-block;">
+							<input id="refresh" type="button" class="input_btn" onclick="Calendar.refresh()" value="Обновить">
+						</div>
+					</div>
+					<div class="full_h fl_r">
+                    	<div id="reset" class="close_window" onclick="Calendar.resetSearch()" style="right: 1px; top: 4px;"></div>
+						<input id="search" autocomplete="off" onkeyup="Calendar.search(this)" class="input_txt fl_r" type="text" placeholder="Событие, дата или участник">
+						<label for="search" class="label_inp fl_r" style="margin-right: 2px;"></label>
+                        <div id="search_tab" class="search_pad">
+                        	<div class="arrow_top"></div>
+                        	<div id="find_elements" style="padding: 4px; overflow-y: scroll; max-height: 420px;"></div>
+                        </div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+    <div id="popup" class="popup popup_m_l" style="display: none;">
+    	<div class="arrow_left"></div>
+    	<div class="close_window" style="right: 2px; top: 2px;" onclick="Calendar.closeWindow()"></div>
+    	<div style="padding: 23px;">
+        	<input id="popup_event" style="height: 29px; width: 235px; margin-bottom: 6px;" onblur="ch_event(this)" class="input_txt" type="text" placeholder="Событие">
+            <div onclick='unch_event(document.getElementById("popup_event"))' style="display: none; color: #000; font-weight: 700; font-size: 17px; margin-left: 10px; margin-bottom: 8px;"></div>
+            <div id="popup_date" style="margin-left: 10px; font-size: 13px; color: #000;"></div>
+            <input id="popup_members" onblur="ch_members(this)" style="margin-top: 8px; height: 29px; width: 235px; margin-bottom: 6px;" class="input_txt" type="text" placeholder="Имена участников">
+            <div onclick='unch_members(document.getElementById("popup_members"))' style="display: none; margin-top: 8px; font-size: 13px; margin-left: 10px;"></div>
+            <textarea class="input_txt" onblur="ch_text(this)" id="discription" style="resize: none; width: 241px; height: 124px; font-family: Tahoma, Arial, Helvetica, sans-serif; padding: 5px; margin-top: 30px;" placeholder="Описание"></textarea>
+            <div onclick='unch_text(document.getElementById("discription"))' style="display: none; margin-top: 8px; font-size: 13px; margin-left: 10px;"></div>
+            <input style="margin: 20px 0 0 0;" type="button" onclick="Calendar.popupAdd()" value="Готово">
+           	<input style="margin-left: 4px;" type="button" onclick="Calendar.popupRemove()" value="Удалить">
+        </div>
+    </div>
+	<div class="content_wrapper">
+		<div class="selection_wrapper">
+			<span>
+				<input title="Предыдущий месяц" id="prev" class="btn_prev" type="button" onclick="Calendar.actPrevMonth()" value="">
+			</span>
+			<span>
+				<span id="cur_date">Сентябрь 2013</span>
+			</span>
+			<span>
+				<input title="Следующий месяц" id="next" class="btn_next" type="button" onclick="Calendar.actNextMonth()" value="">
+			</span>
+			<span>
+				<input title="Вернуться на текущий месяц" id="today" class="btn_selection" type="button" onclick="Calendar.actCurrentMonth()" value="Сегодня">
+			</span>
+		</div>
+		<div class="calendar_layer">
+			<table width="100%" cellspacing="0" border="1" cellpadding="0">
+				<tr>
+					<td>
+						<div onclick="Calendar.element(1)" class="calendar_element_wrapper">
+							<div id="el1" class="calendar_element">
+								<div></div>
+								<div></div>
+							</div>
+						</div>
+					</td>
+					<td>
+						<div onclick="Calendar.element(2)" class="calendar_element_wrapper">
+							<div id="el2" class="calendar_element">
+								<div></div>
+								<div></div>
+							</div>
+						</div>
+					</td>
+					<td>
+						<div onclick="Calendar.element(3)" class="calendar_element_wrapper">
+							<div id="el3" class="calendar_element">
+								<div></div>
+								<div></div>
+							</div>
+						</div>
+					</td> 
+					<td>
+						<div onclick="Calendar.element(4)" class="calendar_element_wrapper">
+							<div id="el4" class="calendar_element">
+								<div></div>
+								<div></div>
+							</div>
+						</div>
+					</td>
+					<td>
+						<div onclick="Calendar.element(5)" class="calendar_element_wrapper">
+							<div id="el5" class="calendar_element">
+								<div></div>
+								<div></div>
+							</div>
+						</div>
+					</td>
+					<td>
+						<div onclick="Calendar.element(6)" class="calendar_element_wrapper">
+							<div id="el6" class="calendar_element">
+								<div></div>
+								<div></div>
+							</div>
+						</div>
+					</td>
+					<td>
+						<div onclick="Calendar.element(7)" class="calendar_element_wrapper">
+							<div id="el7" class="calendar_element">
+								<div></div>
+								<div></div>
+							</div>
+						</div>
+					</td>
+				</tr>
+				<tr>
+					<td>
+						<div onclick="Calendar.element(8)" class="calendar_element_wrapper">
+							<div id="el8" class="calendar_element">
+								<div></div>
+								<div></div>
+							</div>
+						</div>
+					</td>
+					<td>
+						<div onclick="Calendar.element(9)" class="calendar_element_wrapper">
+							<div id="el9" class="calendar_element">
+								<div></div>
+								<div></div>
+							</div>
+						</div>
+					</td>
+					<td>
+						<div onclick="Calendar.element(10)" class="calendar_element_wrapper">
+							<div id="el10" class="calendar_element">
+								<div></div>
+								<div></div>
+							</div>
+						</div>
+					</td> 
+					<td>
+						<div onclick="Calendar.element(11)" class="calendar_element_wrapper">
+							<div id="el11" class="calendar_element">
+								<div></div>
+								<div></div>
+							</div>
+						</div>
+					</td>
+					<td>
+						<div onclick="Calendar.element(12)" class="calendar_element_wrapper">
+							<div id="el12" class="calendar_element">
+								<div></div>
+								<div></div>
+							</div>
+						</div>
+					</td>
+					<td>
+						<div onclick="Calendar.element(13)" class="calendar_element_wrapper">
+							<div id="el13" class="calendar_element">
+								<div></div>
+								<div></div>
+							</div>
+						</div>
+					</td>
+					<td>
+						<div onclick="Calendar.element(14)" class="calendar_element_wrapper">
+							<div id="el14" class="calendar_element">
+								<div></div>
+								<div></div>
+							</div>
+						</div>
+					</td>
+				</tr>
+				<tr>
+					<td>
+						<div onclick="Calendar.element(15)" class="calendar_element_wrapper">
+							<div id="el15" class="calendar_element">
+								<div></div>
+								<div></div>
+							</div>
+						</div>
+					</td>
+					<td>
+						<div onclick="Calendar.element(16)" class="calendar_element_wrapper">
+							<div id="el16" class="calendar_element">
+								<div></div>
+								<div></div>
+							</div>
+						</div>
+					</td>
+					<td>
+						<div onclick="Calendar.element(17)" class="calendar_element_wrapper">
+							<div id="el17" class="calendar_element">
+								<div></div>
+								<div></div>
+							</div>
+						</div>
+					</td> 
+					<td>
+						<div onclick="Calendar.element(18)" class="calendar_element_wrapper">
+							<div id="el18" class="calendar_element">
+								<div></div>
+								<div></div>
+							</div>
+						</div>
+					</td>
+					<td>
+						<div onclick="Calendar.element(19)" class="calendar_element_wrapper">
+							<div id="el19" class="calendar_element">
+								<div></div>
+								<div></div>
+							</div>
+						</div>
+					</td>
+					<td>
+						<div onclick="Calendar.element(20)" class="calendar_element_wrapper">
+							<div id="el20" class="calendar_element">
+								<div></div>
+								<div></div>
+							</div>
+						</div>
+					</td>
+					<td>
+						<div onclick="Calendar.element(21)" class="calendar_element_wrapper">
+							<div id="el21" class="calendar_element">
+								<div></div>
+								<div></div>
+							</div>
+						</div>
+					</td>
+				</tr>
+				<tr>
+					<td>
+						<div onclick="Calendar.element(22)" class="calendar_element_wrapper">
+							<div id="el22" class="calendar_element">
+								<div></div>
+								<div></div>
+							</div>
+						</div>
+					</td>
+					<td>
+						<div onclick="Calendar.element(23)" class="calendar_element_wrapper">
+							<div id="el23" class="calendar_element">
+								<div></div>
+								<div></div>
+							</div>
+						</div>
+					</td>
+					<td>
+						<div onclick="Calendar.element(24)" class="calendar_element_wrapper">
+							<div id="el24" class="calendar_element">
+								<div></div>
+								<div></div>
+							</div>
+						</div>
+					</td> 
+					<td>
+						<div onclick="Calendar.element(25)" class="calendar_element_wrapper">
+							<div id="el25" class="calendar_element">
+								<div></div>
+								<div></div>
+							</div>
+						</div>
+					</td>
+					<td>
+						<div onclick="Calendar.element(26)" class="calendar_element_wrapper">
+							<div id="el26" class="calendar_element">
+								<div></div>
+								<div></div>
+							</div>
+						</div>
+					</td>
+					<td>
+						<div onclick="Calendar.element(27)" class="calendar_element_wrapper">
+							<div id="el27" class="calendar_element">
+								<div></div>
+								<div></div>
+							</div>
+						</div>
+					</td>
+					<td>
+						<div onclick="Calendar.element(28)" class="calendar_element_wrapper">
+							<div id="el28" class="calendar_element">
+								<div></div>
+								<div></div>
+							</div>
+						</div>
+					</td>
+				</tr>
+				<tr>
+					<td>
+						<div onclick="Calendar.element(29)" class="calendar_element_wrapper">
+							<div id="el29" class="calendar_element">
+								<div></div>
+								<div></div>
+							</div>
+						</div>
+					</td>
+					<td>
+						<div onclick="Calendar.element(30)" class="calendar_element_wrapper">
+							<div id="el30" class="calendar_element">
+								<div></div>
+								<div></div>
+							</div>
+						</div>
+					</td>
+					<td>
+						<div onclick="Calendar.element(31)" class="calendar_element_wrapper">
+							<div id="el31" class="calendar_element">
+								<div></div>
+								<div></div>
+							</div>
+						</div>
+					</td> 
+					<td>
+						<div onclick="Calendar.element(32)" class="calendar_element_wrapper">
+							<div id="el32" class="calendar_element">
+								<div></div>
+								<div></div>
+							</div>
+						</div>
+					</td>
+					<td>
+						<div onclick="Calendar.element(33)" class="calendar_element_wrapper">
+							<div id="el33" class="calendar_element">
+								<div></div>
+								<div></div>
+							</div>
+						</div>
+					</td>
+					<td>
+						<div onclick="Calendar.element(34)" class="calendar_element_wrapper">
+							<div id="el34" class="calendar_element">
+								<div></div>
+								<div></div>
+							</div>
+						</div>
+					</td>
+					<td>
+						<div onclick="Calendar.element(35)" class="calendar_element_wrapper">
+							<div id="el35" class="calendar_element">
+								<div></div>
+								<div></div>
+							</div>
+						</div>
+					</td>
+				</tr>
+				<tr>
+					<td>
+						<div onclick="Calendar.element(36)" class="calendar_element_wrapper">
+							<div id="el36" class="calendar_element">
+								<div></div>
+								<div></div>
+							</div>
+						</div>
+					</td>
+					<td>
+						<div onclick="Calendar.element(37)" class="calendar_element_wrapper">
+							<div id="el37" class="calendar_element">
+								<div></div>
+								<div></div>
+							</div>
+						</div>
+					</td>
+					<td>
+						<div onclick="Calendar.element(38)" class="calendar_element_wrapper">
+							<div id="el38" class="calendar_element">
+								<div></div>
+								<div></div>
+							</div>
+						</div>
+					</td> 
+					<td>
+						<div onclick="Calendar.element(39)" class="calendar_element_wrapper">
+							<div id="el39" class="calendar_element">
+								<div></div>
+								<div></div>
+							</div>
+						</div>
+					</td>
+					<td>
+						<div onclick="Calendar.element(40)" class="calendar_element_wrapper">
+							<div id="el40" class="calendar_element">
+								<div></div>
+								<div></div>
+							</div>
+						</div>
+					</td>
+					<td>
+						<div onclick="Calendar.element(41)" class="calendar_element_wrapper">
+							<div id="el41" class="calendar_element">
+								<div></div>
+								<div></div>
+							</div>
+						</div>
+					</td>
+					<td>
+						<div onclick="Calendar.element(42)" class="calendar_element_wrapper">
+							<div id="el42" class="calendar_element">
+								<div></div>
+								<div></div>
+							</div>
+						</div>
+					</td>
+				</tr>
+			</table>
+		</div>
+	</div>
+</body>
+</html>
