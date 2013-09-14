@@ -496,6 +496,7 @@ var Calendar = {
 			var el = document.getElementById('el'+this.cur_pos);
 			el.parentNode.parentNode.style.backgroundColor = '';
 			el.parentNode.style.boxShadow = '';
+			this.make();
 		}
 		this.cur_pos = number;
 		if ((this.cur_pos >= this.first_day_month) && (this.cur_pos <= this.first_day_month + this.max_days_in_month() - 1))
