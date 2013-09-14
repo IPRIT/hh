@@ -516,7 +516,7 @@ var Calendar = {
 			{
 				var inputs = popup.getElementsByTagName('div')[2].getElementsByTagName('input');
 				inputs[0].value = data.header;
-				ch_event(inputs[0]);
+				setTimeout(function() {unch_event(inputs[0])},10);
 				inputs[1].value = (data.members == "&nbsp;") ? '' : data.members;
 				ch_members(inputs[1]);
 				var textarea = document.getElementById('discription');
