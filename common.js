@@ -85,7 +85,6 @@ var Calendar = {
 			cont.innerHTML = text;
 		}
 		this.insertDaysName();
-		console.log("Создано");
 	},
 	
 	insertDaysName: function() {
@@ -296,7 +295,6 @@ var Calendar = {
 		if (args[0].d != '' && args[0].m != '' && args[0].y != '') {
 			for (var key in st)
 				st[key][st[key].length] = args[0][key];	
-			console.log("Добавлено");
 		}
 	},
 	
@@ -320,7 +318,6 @@ var Calendar = {
 				{
 					st[key].splice(i, 1);
 				}
-				console.log("Удалено");
 			}
 		}
 	},
@@ -443,7 +440,6 @@ var Calendar = {
 				}
 			}
 		}
-		console.log(data);
 		
 		data = this.removeDuplicate(data);
 		var inner = '';
