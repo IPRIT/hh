@@ -85,6 +85,7 @@ var Calendar = {
 			cont.innerHTML = text;
 		}
 		this.insertDaysName();
+		this.refreshCur();
 	},
 	
 	insertDaysName: function() {
